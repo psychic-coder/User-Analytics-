@@ -1,0 +1,31 @@
+{
+  "name": "user-analytics-app",
+  "version": "1.0.0",
+  "description": "Full-stack User Analytics Tracker for e-commerce",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:dashboard\"",
+    "dev:server": "npm run dev --prefix apps/server",
+    "dev:dashboard": "npm run dev --prefix apps/dashboard",
+    "build": "npm run build --workspaces",
+    "build:server": "npm run build --prefix apps/server",
+    "build:dashboard": "npm run build --prefix apps/dashboard",
+    "test": "npm run test --workspaces",
+    "test:server": "npm run test --prefix apps/server",
+    "test:dashboard": "npm run test --prefix apps/dashboard",
+    "test:tracker": "npm run test --prefix apps/tracker",
+    "lint": "eslint apps/* --ext .ts,.tsx",
+    "format": "prettier --write apps/*",
+    "docker:up": "docker compose up",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1"
+  }
+}

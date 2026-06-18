@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Analytics Demo - E-commerce Store</title>
+  <script src="../apps/tracker/tracker.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #2563eb;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar-logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .navbar-links a {
+      color: white;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .navbar-links a:hover {
+      opacity: 0.8;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+      background: #fbbf24;
+      color: #1f2937;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Products Section */
+    .products {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .products h2 {
+      text-align: center;
+      margin-bottom: 3rem;
+      font-size: 2rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 200px;
+      background: #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+    }
+
+    .product-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-price {
+      color: #2563eb;
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .btn-secondary {
+      background: #2563eb;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #1d4ed8;
+    }
+
+    /* Features Section */
+    .features {
+      background: white;
+      padding: 4rem 2rem;
+    }
+
+    .features-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .feature-item {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Contact Form */
+    .contact {
+      padding: 4rem 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .btn-submit {
+      background: #10b981;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-submit:hover {
+      background: #059669;
+    }
+
+    /* Footer */
+    .footer {
+      background: #1f2937;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* Session Info */
+    .session-info {
+      background: #fef3c7;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      margin: 2rem auto;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .session-info code {
+      background: #fde68a;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-logo">ShopAnalytics</div>
+    <div class="navbar-links">
+      <a href="#">Home</a>
+      <a href="#">Products</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Session Info -->
+  <div class="session-info">
+    📊 Session ID: <code id="session-id">Loading...</code>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to ShopAnalytics</h1>
+    <p>The best products with analytics tracking</p>
+    <button class="btn-primary" onclick="alert('Shop Now clicked!')">Shop Now</button>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <div class="product-image">📱 Product 1</div>
+        <h3 class="product-title">Smartphone Pro</h3>
+        <p class="product-price">$999.99</p>
+        <button class="btn-secondary">Add to Cart</button>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">💻 Product 2</div>
+        <h3 class="product-title">Laptop Ultra</h3>
+        <p class="product-price">$1,499.99</p>
+        <button class="btn-secondary">Add to Cart</button>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">🎧 Product 3</div>
+        <h3 class="product-title">Wireless Headphones</h3>
+        <p class="product-price">$299.99</p>
+        <button class="btn-secondary">Add to Cart</button>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">⌚ Product 4</div>
+        <h3 class="product-title">Smart Watch</h3>
+        <p class="product-price">$449.99</p>
+        <button class="btn-secondary">Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="features-container">
+      <div class="feature-item">
+        <div class="feature-icon">🚀</div>
+        <h3>Fast Shipping</h3>
+        <p>Get your products in 2-3 days</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔒</div>
+        <h3>Secure Payment</h3>
+        <p>Your data is protected</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⭐</div>
+        <h3>Quality Products</h3>
+        <p>Top-rated by customers</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="contact">
+    <h2>Contact Us</h2>
+    <form id="contact-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2026 ShopAnalytics. All rights reserved.</p>
+    <p style="margin-top: 0.5rem;">
+      <a href="#" style="color: #9ca3af; margin: 0 1rem;">Privacy Policy</a>
+      <a href="#" style="color: #9ca3af; margin: 0 1rem;">Terms of Service</a>
+    </p>
+  </footer>
+
+  <script>
+    // Display session ID
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        const sessionId = window.analyticsTrackerAPI?.getSessionId();
+        if (sessionId) {
+          document.getElementById('session-id').textContent = sessionId;
+        }
+      }, 500); // short delay to ensure tracker loads
+    });
+
+    // Track form submission
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Form submitted! Event tracked.');
+    });
+  </script>
+</body>
+</html>

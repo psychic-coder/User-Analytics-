@@ -1,0 +1,19 @@
+{
+  "name": "@user-analytics/tracker",
+  "version": "1.0.0",
+  "description": "User Analytics Tracking SDK",
+  "main": "tracker.js",
+  "scripts": {
+    "test": "jest",
+    "build": "echo 'No build step required for tracker'",
+    "dev": "echo 'Tracker is ready to use'"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"]
+  }
+}
