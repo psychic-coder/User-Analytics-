@@ -16,7 +16,6 @@ export default function Sessions() {
 
   return (
     <div className="flex flex-col gap-6 h-full">
-      {/* Header Section */}
       <div className="flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 tracking-tight">User Sessions</h2>
@@ -32,12 +31,9 @@ export default function Sessions() {
         </button>
       </div>
 
-      {/* Main Content Area */}
       <div className="flex gap-6 flex-1 min-h-0 relative">
-        {/* Sessions List Area */}
         <div className={`flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200/60 overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${selectedSessionId ? 'w-full lg:w-7/12' : 'w-full'}`}>
           
-          {/* Table Header / Filters Mockup */}
           <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
             <div className="relative w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -120,7 +116,6 @@ export default function Sessions() {
             )}
           </div>
 
-          {/* Pagination */}
           {data?.pagination && (
             <div className="p-4 border-t border-slate-100 flex justify-between items-center bg-white">
               <span className="text-sm font-medium text-slate-500">
@@ -146,7 +141,6 @@ export default function Sessions() {
           )}
         </div>
 
-        {/* Side Panel for Session Details */}
         {selectedSessionId && (
           <div className="hidden lg:flex w-5/12 bg-white rounded-2xl shadow-lg shadow-slate-200/40 border border-slate-200/80 flex-col overflow-hidden animate-in slide-in-from-right-8 duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] relative z-10">
             <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20">

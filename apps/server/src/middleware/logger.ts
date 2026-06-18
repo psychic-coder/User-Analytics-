@@ -1,6 +1,5 @@
 import morgan, { TokenIndexer } from 'morgan';
 import { Request, Response } from 'express';
-
 export const requestLogger = morgan(
   (tokens: TokenIndexer<Request, Response>, req: Request, res: Response): string => {
     return [

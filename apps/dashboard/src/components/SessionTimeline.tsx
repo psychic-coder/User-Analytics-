@@ -22,14 +22,12 @@ export default function SessionTimeline({ sessionId }: { sessionId: string }) {
     <div className="relative pl-4 space-y-6 before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-indigo-100 before:via-slate-200 before:to-transparent">
       {events.map((event, index) => (
         <div key={event._id || index} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-          {/* Icon */}
           <div className={`flex items-center justify-center w-8 h-8 rounded-full border-4 border-white shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 relative z-10 transition-transform group-hover:scale-110 ${
             event.eventType === 'page_view' ? 'bg-indigo-500 text-white' : 'bg-white text-slate-500 border-slate-200'
           }`}>
             {event.eventType === 'page_view' ? <Eye size={12} strokeWidth={3} /> : <MousePointerClick size={12} strokeWidth={2.5} />}
           </div>
           
-          {/* Card */}
           <div className="w-[calc(100%-3rem)] md:w-[calc(50%-2rem)] bg-white p-4 rounded-xl border border-slate-200 shadow-sm transition-all duration-300 hover:shadow-md hover:border-slate-300 group-hover:-translate-y-0.5">
             <div className="flex items-center justify-between mb-2">
               <span className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 ${

@@ -3,17 +3,13 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { config } from '../config';
-
 export const configureSecurity = (app: Express) => {
   app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
   }));
-
   app.use(
     cors({
       origin: (origin, callback) => {
-        // Allow requests with no origin (mobile apps, curl, Postman)
-        // and any localhost origin for development
         if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1')) {
           callback(null, true);
         } else {
@@ -25,7 +21,6 @@ export const configureSecurity = (app: Express) => {
       credentials: true,
     })
   );
-
   app.use(
     rateLimit({
       windowMs: config.rateLimitWindow,
