@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Tracking Demo</title>
+    <!-- Include the tracker SDK -->
+    <script src="/tracker.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f9fafb;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #4338ca;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Tracker SDK Demo Page</h1>
+        <p>This page automatically loads `tracker.js` and sends page_view and click events to the backend.</p>
+    </div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/about">About Us</a>
+        <a href="/cart">Cart</a>
+        <a href="/checkout">Checkout</a>
+    </div>
+
+    <div class="card" id="interactive-area">
+        <h2>Interactive Elements</h2>
+        <p>Click anywhere on this page to generate click events. The coordinates and timestamp will be sent to the backend.</p>
+        
+        <div>
+            <button id="add-to-cart-btn">Add to Cart</button>
+            <button id="signup-btn">Sign Up</button>
+            <button id="learn-more-btn">Learn More</button>
+        </div>
+
+        <div style="margin-top: 20px; padding: 15px; background-color: #e0e7ff; border-radius: 6px;">
+            <strong>Your Session ID:</strong>
+            <code id="session-display" style="display: block; margin-top: 5px; color: #4338ca;">Loading...</code>
+        </div>
+    </div>
+
+    <script>
+        // Display the session ID tracked by the SDK
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (window.analyticsTrackerAPI) {
+                    document.getElementById('session-display').textContent = window.analyticsTrackerAPI.getSessionId();
+                } else {
+                    document.getElementById('session-display').textContent = 'SDK not loaded. Check network tab.';
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

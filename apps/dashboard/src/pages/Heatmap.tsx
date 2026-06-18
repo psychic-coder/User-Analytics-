@@ -3,9 +3,17 @@ import { useQuery } from '@tanstack/react-query';
 import { getHeatmapData } from '../services/api';
 import HeatmapCanvas from '../components/HeatmapCanvas';
 
+const KNOWN_PAGES = [
+  'http://localhost:3000/',
+  'http://localhost:3000/products',
+  'http://localhost:3000/about',
+  'http://localhost:3000/contact',
+  'http://localhost:3000/cart',
+  'http://localhost:3000/checkout',
+];
+
 export default function Heatmap() {
-  const [pageUrl, setPageUrl] = useState('http://localhost:3000/demo');
-  const [inputUrl, setInputUrl] = useState('http://localhost:3000/demo');
+  const [pageUrl, setPageUrl] = useState(KNOWN_PAGES[0]);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['heatmap', pageUrl],
@@ -13,10 +21,7 @@ export default function Heatmap() {
     enabled: !!pageUrl,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPageUrl(inputUrl);
-  };
+  const points = data?.data || [];
 
   return (
     <div className="h-full flex flex-col bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -25,37 +30,50 @@ export default function Heatmap() {
           <h3 className="text-lg font-semibold text-slate-800">Click Heatmap</h3>
           <p className="text-sm text-slate-500 mt-1">Visualize user clicks across your pages</p>
         </div>
-        
-        <form onSubmit={handleSubmit} className="flex gap-3">
-          <input
-            type="url"
-            value={inputUrl}
-            onChange={(e) => setInputUrl(e.target.value)}
-            className="w-80 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm"
-            placeholder="Enter page URL..."
-          />
-          <button
-            type="submit"
-            className="px-5 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm"
+
+        <div className="flex items-center gap-3">
+          <label className="text-sm text-slate-500 font-medium">Page:</label>
+          <select
+            value={pageUrl}
+            onChange={(e) => setPageUrl(e.target.value)}
+            className="w-72 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white shadow-sm"
           >
-            Load Heatmap
-          </button>
-        </form>
+            {KNOWN_PAGES.map((url) => (
+              <option key={url} value={url}>
+                {url.replace('http://localhost:3000', '') || '/'}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      <div className="flex-1 bg-slate-100 relative overflow-auto flex items-center justify-center p-8">
+      <div className="flex-1 bg-slate-100 relative overflow-auto flex flex-col items-center justify-center p-8 gap-4">
+        {/* Stats bar */}
+        {!isLoading && !isError && (
+          <div className="flex gap-4 self-stretch justify-end">
+            <div className="bg-white rounded-lg px-4 py-2 border border-slate-200 text-sm shadow-sm">
+              <span className="text-slate-500">Clicks on this page: </span>
+              <span className="font-semibold text-slate-800">{points.length}</span>
+            </div>
+          </div>
+        )}
+
         {isLoading ? (
-          <div className="flex flex-col items-center text-slate-500 animate-pulse">
-            <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
-            Loading heatmap data...
+          <div className="flex flex-col items-center text-slate-500 animate-pulse gap-3">
+            <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+            Loading heatmap...
           </div>
         ) : isError ? (
           <div className="text-red-500 font-medium">Failed to load heatmap data.</div>
+        ) : points.length === 0 ? (
+          <div className="flex flex-col items-center text-slate-400 gap-2">
+            <span className="text-5xl">🖱️</span>
+            <p className="font-medium text-slate-500">No click data for this page yet</p>
+            <p className="text-sm">Try selecting a different page from the dropdown above</p>
+          </div>
         ) : (
           <div className="relative shadow-xl rounded-lg overflow-hidden border border-slate-200 bg-white">
-             {/* If we have an actual website to load, we could use an iframe, but for demo we just show canvas */}
-            <div className="absolute inset-0 bg-white/50 z-0"></div>
-            <HeatmapCanvas points={data?.data || []} width={1024} height={768} />
+            <HeatmapCanvas points={points} width={1024} height={768} />
           </div>
         )}
       </div>

@@ -5,13 +5,24 @@ import rateLimit from 'express-rate-limit';
 import { config } from '../config';
 
 export const configureSecurity = (app: Express) => {
-  app.use(helmet());
+  app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }));
 
   app.use(
     cors({
-      origin: config.clientUrl,
-      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, curl, Postman)
+        // and any localhost origin for development
+        if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+          callback(null, true);
+        } else {
+          callback(null, config.clientUrl === origin);
+        }
+      },
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
     })
   );
 
