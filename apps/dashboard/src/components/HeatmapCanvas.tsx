@@ -17,36 +17,34 @@ export default function HeatmapCanvas({ points, width, height }: Props) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Clear canvas
+    // Clear canvas completely to make it transparent
     ctx.clearRect(0, 0, width, height);
 
-    // Basic background
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, width, height);
+    // Use lighter composition so overlapping gradients become brighter/hotter
+    ctx.globalCompositeOperation = 'lighter';
 
-    // Draw grid to simulate a page structure
-    ctx.strokeStyle = '#f1f5f9';
-    ctx.lineWidth = 1;
-    for(let i=0; i<width; i+=50) {
-      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, height); ctx.stroke();
-    }
-    for(let i=0; i<height; i+=50) {
-      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(width, i); ctx.stroke();
-    }
-
-    // Draw points
+    // Draw points as radial glowing orbs
     points.forEach((point) => {
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, 8, 0, 2 * Math.PI, false);
-      ctx.fillStyle = 'rgba(239, 68, 68, 0.4)'; // Red with opacity
-      ctx.fill();
+      const radius = 30; // larger radius for heatmap effect
+      const gradient = ctx.createRadialGradient(
+        point.x, point.y, 0,
+        point.x, point.y, radius
+      );
       
-      // Center dot
+      // Hot center, fading out to red, then transparent
+      gradient.addColorStop(0, 'rgba(255, 200, 0, 0.8)'); // Yellowish center
+      gradient.addColorStop(0.3, 'rgba(239, 68, 68, 0.5)'); // Red middle
+      gradient.addColorStop(1, 'rgba(239, 68, 68, 0)'); // Transparent edge
+
       ctx.beginPath();
-      ctx.arc(point.x, point.y, 2, 0, 2 * Math.PI, false);
-      ctx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+      ctx.arc(point.x, point.y, radius, 0, 2 * Math.PI, false);
+      ctx.fillStyle = gradient;
       ctx.fill();
     });
+
+    // Reset composite operation
+    ctx.globalCompositeOperation = 'source-over';
+
   }, [points, width, height]);
 
   return (
@@ -54,7 +52,7 @@ export default function HeatmapCanvas({ points, width, height }: Props) {
       ref={canvasRef}
       width={width}
       height={height}
-      className="max-w-full block shadow-sm border border-slate-200 z-10 relative"
+      className="max-w-full block z-10 absolute inset-0 pointer-events-none"
       style={{
         background: 'transparent'
       }}
