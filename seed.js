@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const MONGO_URI =
-  process.env.MONGO_URI ||
-  'mongodb+srv://rohitganguly450:brocode@cluster0.t2q5ie6.mongodb.net/analytics_db?retryWrites=true&w=majority';
+  process.env.MONGO_URI ;
 const PAGE_URLS = [
   'http://localhost:3000/',
   'http://localhost:3000/products',
