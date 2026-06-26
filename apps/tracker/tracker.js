@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   const CONFIG = {
-    API_ENDPOINT: 'http://localhost:5000/api/events',
+    API_ENDPOINT: 'http://localhost:5001/api/events',
     QUEUE_MAX_SIZE: 100,
     DEBOUNCE_DELAY: 100,
     STORAGE_KEY_SESSION: 'analytics_session_id',

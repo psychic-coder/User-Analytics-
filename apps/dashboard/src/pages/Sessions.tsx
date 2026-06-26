@@ -8,11 +8,16 @@ import { Clock, MousePointerClick, RefreshCw, Activity, Search } from 'lucide-re
 export default function Sessions() {
   const [page, setPage] = useState(1);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading, isError, refetch, isRefetching } = useQuery({
     queryKey: ['sessions', page],
     queryFn: () => getSessions(page, 20),
   });
+
+  const filteredSessions = data?.data?.filter((session) => 
+    session.sessionId.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
 
   return (
     <div className="flex flex-col gap-6 h-full">
@@ -40,8 +45,9 @@ export default function Sessions() {
               <input 
                 type="text" 
                 placeholder="Search sessions..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-4 py-1.5 text-sm bg-white border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-shadow placeholder:text-slate-400"
-                disabled
               />
             </div>
             <div className="flex items-center gap-4 text-sm font-medium text-slate-500 px-4">
@@ -65,8 +71,14 @@ export default function Sessions() {
                 <p className="font-medium text-slate-600">No active sessions found.</p>
                 <p className="text-sm mt-1">Waiting for users to visit the site...</p>
               </div>
+            ) : filteredSessions.length === 0 ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                <span className="text-4xl mb-4 opacity-50">🔍</span>
+                <p className="font-medium text-slate-600">No sessions match your search.</p>
+                <p className="text-sm mt-1">Try a different session ID...</p>
+              </div>
             ) : (
-              data?.data.map((session) => {
+              filteredSessions.map((session) => {
                 const duration = formatDistanceStrict(new Date(session.firstEvent), new Date(session.lastEvent));
                 const isSelected = selectedSessionId === session.sessionId;
                 
